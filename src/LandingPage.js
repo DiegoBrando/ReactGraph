@@ -1,7 +1,7 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from '@apollo/client';
-
+import clsx from 'clsx';
 import './App.css'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -13,8 +13,22 @@ import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Drawer from '@material-ui/core/Drawer';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import SideBar from './Widgets/SideBar.js'
+import IconButton from '@material-ui/core/IconButton';
 import {useHistory} from 'react-router-dom';
+import LocationInfo from './Widgets/LocationInfo.js'
+import ViewsChart from './Widgets/ViewsChart.js'
+import ClicksChart from './Widgets/ClicksChart.js'
+import MenuIcon from '@material-ui/icons/Menu';
+import Divider from '@material-ui/core/Divider';
+import useStyles from './styling.js'
 import {
   BrowserRouter as Router,
   Switch,
@@ -22,11 +36,6 @@ import {
   Link
 } from "react-router-dom";
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
 
 
 const DELETE_COMMENT = gql`
@@ -59,8 +68,6 @@ function SayNo(){
 
 
 
-
-
 function LandingPage(props){
   const history = useHistory();
   const classes = useStyles();
@@ -80,36 +87,71 @@ class LandingPageComponent extends React.Component {
   constructor(props) {
   super(props);
 
-  this.state = {locationinfo: this.props.locationinfo,class:this.props.classes, history:this.props.history};
+  this.state = {locationinfo: this.props.locationinfo,classes:this.props.classes, history:this.props.history, width:100,open:false};
 }
 
+
+handleToggle = () => this.setState({open: !this.state.open});
 
 
 
   render(){
     return (
- <div><Grid container spacing={3}>
- <Grid item xs><Button onClick={(event)=>{this.state.history.goBack()}}>GoBack</Button></Grid>
- </Grid>
- <Grid container spacing={3}>
+      <React.Fragment>
 
- <Grid item xs={12}> <Button onClick={(event)=>{console.log(this.state.locationinfo.locationbyid[0].locationid); this.state.history.push({pathname:'/Deals',state:{locationid:this.state.locationinfo.locationbyid[0].locationid}}); }}>Deals</Button></Grid>
- <Grid item xs={12}> <Button onClick={(event)=>{console.log(this.state.locationinfo.locationbyid[0].locationid); this.state.history.push({pathname:'/Comments',state:{locationid:this.state.locationinfo.locationbyid[0].locationid}}); }}>Comments</Button></Grid>
-  <Grid item xs={12}> <Button onClick={(event)=>{console.log(this.state.locationinfo.locationbyid[0].locationid); this.state.history.push({pathname:'/EditLocation',state:{locationid:this.state.locationinfo.locationbyid[0].locationid,locationname:this.state.locationinfo.locationbyid[0].locationname, latitude:this.state.locationinfo.locationbyid[0].latitude,longitude:this.state.locationinfo.locationbyid[0].longitude}}); }}>Change Location</Button></Grid>
+       <Drawer
+         variant="permanent"
+         docked={false}
+
+         open={this.state.open}
+           onRequestChange={(open) => {this.setState({open});}}
+         classes={{
+           paper: clsx(this.state.classes.drawerPaper, !this.state.open && this.state.classes.drawerPaperClose),
+
+         }}
+         >
+         <div className={this.state.classes.toolbarIcon}>
+         <Button
+           onClick={(event)=>{this.handleToggle(); if(this.state.open){this.setState({width:100})} else{this.setState({width:250})} console.log(this.state.width)}}
+         >
+         <MenuIcon/>
+         </Button>
+         </div>
+
+
+        <SideBar locationid={this.state.locationinfo.locationbyid[0].locationid}/>
+      </Drawer>
 
 
 
- </Grid>
-<Grid container spacing={1}>
 
+<div style={{marginLeft:this.state.width}} >
 
-<Grid item lg={10}></Grid>
-<Grid item lg={10}></Grid>
-<Grid item lg={10}>{this.state.locationinfo.locationbyid[0].locationname}</Grid>
-<Grid item lg={10}>{this.state.locationinfo.locationbyid[0].latitude }       {this.state.locationinfo.locationbyid[0].longitude}</Grid></Grid>
+<Container maxWidth="lg" >
+<Grid container spacing={3} className={this.state.classes.container}>
+<Grid item xs={12} md={9} lg={9}>
+<Paper className={this.state.classes.paper}>
+<LocationInfo locationid={this.state.locationinfo.locationbyid[0].locationid}/>
+</Paper>
+</Grid>
 
+<Grid item xs={12} md={9} lg={9}>
+<Paper className={this.state.classes.paper}>
+<ViewsChart locationid={this.state.locationinfo.locationbyid[0].locationid}/>
+</Paper>
+</Grid>
 
-      </div>
+<Grid item xs={12} md={9} lg={9}>
+<Paper>
+<ClicksChart locationid={this.state.locationinfo.locationbyid[0].locationid}/>
+</Paper>
+</Grid>
+
+</Grid>
+</Container>
+
+</div>
+</React.Fragment>
 
     );
   }

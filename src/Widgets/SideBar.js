@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -9,62 +9,77 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import List from '@material-ui/core/List';
+import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
+import {useHistory} from 'react-router-dom';
 
-export const mainListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItem>
-  </div>
-);
 
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItem>
-  </div>
-);
+function SideBar(props){
+  const history = useHistory();
+
+
+
+  return <SideBarComponent locationid={props.locationid} history={history}/>
+
+}
+
+class SideBarComponent extends React.Component {
+
+    constructor(props) {
+    super(props);
+    this.state = {locationid: this.props.locationid, history:this.props.history};
+  }
+
+
+
+  render(){
+    return (
+      <React.Fragment>
+      <List>
+
+      <ListItem button onClick={(event)=>{console.log(this.state.locationid); this.props.history.push({pathname:'/Landing',state:{locationid:this.state.locationid}}); }}>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+
+
+
+      <ListItem button onClick={(event)=>{ console.log(this.state.locationid); this.state.history.push({pathname:'/Deals',state:{locationid:this.state.locationid}}); }}>
+        <ListItemIcon>
+          <ShoppingCartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Deal" />
+      </ListItem>
+
+
+      <ListItem button onClick={(event)=>{ console.log(this.state.locationid); this.state.history.push({pathname:'/Comments',state:{locationid:this.state.locationid}}); }}>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Comments" />
+      </ListItem>
+
+
+      <ListItem button onClick={(event)=>{this.state.history.goBack(); }}>
+        <ListItemIcon>
+          <KeyboardReturnIcon />
+        </ListItemIcon>
+        <ListItemText primary="GoBack" />
+      </ListItem>
+
+</List>
+      </React.Fragment>
+
+
+    )}
+
+
+
+
+
+}
+
+
+export default SideBar

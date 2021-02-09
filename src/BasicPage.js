@@ -13,6 +13,11 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import MenuItem from '@material-ui/core/MenuItem';
+import SideBarA from './Widgets/SideBar.js'
+import SideBar from './Widgets/SideBar.js'
 import {useHistory} from 'react-router-dom';
 import {
   BrowserRouter as Router,
@@ -66,7 +71,7 @@ class SelectPageComponent extends React.Component {
 
   constructor(props) {
   super(props);
-  this.state = {locations: this.props.locations, history:this.props.history};
+  this.state = {locations: this.props.locations, history:this.props.history, locationid:0};
 }
 
 
@@ -74,31 +79,24 @@ class SelectPageComponent extends React.Component {
 
   render(){
     return (
-      <div><Grid container spacing={3}>
-       <Grid item xs><Button onClick={(event)=>{console.log(event); this.props.history.push({pathname:'/NewLocation',state:{locationid:0}}); }}>New Location</Button></Grid>
+      <div><Grid container spacing={0} alignItems="center" justify="center">
+       <Grid item xs={12} xl={3}><Button onClick={(event)=>{console.log(event); this.props.history.push({pathname:'/NewLocation',state:{locationid:0}}); }}>New Location</Button></Grid>
+<Grid item xs={12} xl={3}>      <TextField
+       select
+       label="Select"
+       fullWidth={true}
+       defaultValue={this.state.locationid}
+       onChange={e=>{this.setState({locationid:e.target.value}); console.log(e.target.value);}}
+
+     >
+     {this.state.locations.locations.map((location) => (
+           <MenuItem key={location.locationid} value={location.locationid}>
+             {location.locationname}
+           </MenuItem>
+         ))}
+       </TextField> </Grid>
+       <Grid item={6}><Button onClick={(event)=>{console.log(this.state.locationid); this.props.history.push({pathname:'/Landing',state:{locationid:this.state.locationid}}); }}>Go</Button></Grid>
       </Grid>
-      <TableContainer component={Paper}>
-        <Table  aria-label="simple table">
-          <TableHead>
-            <TableRow>
-
-              <TableCell align="right">locationname</TableCell>
-
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.state.locations.locations.map((location) => (
-
-
-              <TableRow key={location.locationid}>
-
-
-                <TableCell align="right"><Button onClick={(event)=>{console.log(location.locationid); this.props.history.push({pathname:'/Landing',state:{locationid:location.locationid}}); }}>{location.locationname}</Button></TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
       </div>
     );
   }
