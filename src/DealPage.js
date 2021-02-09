@@ -100,7 +100,7 @@ function DealsTable(props){
 
 
 
-  return<DealsTableComponent deals={data} classes={classes} deletedeal={deletedeal} history={history} totalviews={totalviews} totalclicks={totalclicks}/>
+  return<DealsTableComponent deals={data} classes={classes} deletedeal={deletedeal} history={history} totalviews={totalviews} totalclicks={totalclicks} locationid={props.history.location.state.locationid}/>
 }
 
 class DealsTableComponent extends React.Component {
@@ -108,7 +108,7 @@ class DealsTableComponent extends React.Component {
   constructor(props) {
   super(props);
 
-  this.state = {deals: this.props.deals,classes:this.props.classes,deletedeal:this.props.deletedeal, history:this.props.history, open:false, width:100, totalclicks:this.props.totalclicks, totalviews:this.props.totalviews};
+  this.state = {deals: this.props.deals,classes:this.props.classes,deletedeal:this.props.deletedeal, history:this.props.history, open:false, width:100, totalclicks:this.props.totalclicks, totalviews:this.props.totalviews, locationid:this.props.locationid};
 }
 handleRemove(id) {
   console.log(id)
@@ -143,13 +143,13 @@ handleRemove(id) {
           </Button>
           </div>
 
-<SideBar locationid={this.state.deals.alldealsbylocationid[0].location[0].locationid}/>
+<SideBar locationid={this.state.locationid}/>
              </Drawer>
 <div style={{marginLeft:this.state.width}}>
 <Paper>
 <Grid container spacing={3}>
 
-  <Grid item xs={12}><Button onClick={(event)=>{console.log(event); this.props.history.push({pathname:'/NewDeal',state:{locationid:this.state.deals.alldealsbylocationid[0].location[0].locationid}}); }}>New Deal</Button></Grid>
+  <Grid item xs={12}><Button onClick={(event)=>{console.log(event); this.props.history.push({pathname:'/NewDeal',state:{locationid:this.state.locationid}}); }}>New Deal</Button></Grid>
  <Grid item xs={12}><Typography component="h2" variant="h6" color="primary" gutterBottom>Total Views: {this.state.totalviews}  Total Clicks: {this.state.totalclicks}</Typography></Grid>
  </Grid>
       <TableContainer component={Paper}>
@@ -184,7 +184,7 @@ handleRemove(id) {
                 <TableCell align="right">{deal.location[0].locationname}</TableCell>
                 <TableCell align="right">{deal.views}</TableCell>
                 <TableCell align="right">{deal.clicks}</TableCell>
-                  <TableCell align="right"><Button onClick={(event)=>{console.log(event); this.props.history.push({pathname:'/EditDeal',state:{locationid:deal.location[0].locationid,title:deal.dealtitle,description:deal.description,featured:deal.featured,dealid:deal.dealid}}); }}>Edit</Button></TableCell>
+                  <TableCell align="right"><Button onClick={(event)=>{console.log(event); this.props.history.push({pathname:'/EditDeal',state:{locationid:this.state.locationid,title:deal.dealtitle,description:deal.description,featured:deal.featured,dealid:deal.dealid}}); }}>Edit</Button></TableCell>
 
               </TableRow>
             ))}
