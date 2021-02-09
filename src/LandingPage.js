@@ -29,6 +29,8 @@ import ClicksChart from './Widgets/ClicksChart.js'
 import MenuIcon from '@material-ui/icons/Menu';
 import Divider from '@material-ui/core/Divider';
 import useStyles from './styling.js'
+import GridPaperComponent from './Widgets/GridPaper.js'
+import ClicksandViewsChart from "./Widgets/ClicksandViewsChart.js"
 import {
   BrowserRouter as Router,
   Switch,
@@ -90,7 +92,23 @@ class LandingPageComponent extends React.Component {
   this.state = {locationinfo: this.props.locationinfo,classes:this.props.classes, history:this.props.history, width:100,open:false};
 }
 
+changesize() {
 
+  if(this.state.open){
+    this.setState({width:100})
+  }
+  else{
+    this.setState({width:250})
+  }
+
+}
+
+
+changeopen(open) {
+
+this.setState({open:open})
+
+}
 handleToggle = () => this.setState({open: !this.state.open});
 
 
@@ -99,28 +117,13 @@ handleToggle = () => this.setState({open: !this.state.open});
     return (
       <React.Fragment>
 
-       <Drawer
-         variant="permanent"
-         docked={false}
-
-         open={this.state.open}
-           onRequestChange={(open) => {this.setState({open});}}
-         classes={{
-           paper: clsx(this.state.classes.drawerPaper, !this.state.open && this.state.classes.drawerPaperClose),
-
-         }}
-         >
-         <div className={this.state.classes.toolbarIcon}>
-         <Button
-           onClick={(event)=>{this.handleToggle(); if(this.state.open){this.setState({width:100})} else{this.setState({width:250})} console.log(this.state.width)}}
-         >
-         <MenuIcon/>
-         </Button>
-         </div>
 
 
-        <SideBar locationid={this.state.locationinfo.locationbyid[0].locationid}/>
-      </Drawer>
+
+
+      <SideBar locationid={this.state.locationinfo.locationbyid[0].locationid} classes={this.state.classes} open={this.state.open} handletoggle={this.handleToggle.bind(this)} statesetting={this.changesize.bind(this)} changeopen={this.changeopen.bind(this)}/>
+
+
 
 
 
@@ -129,23 +132,9 @@ handleToggle = () => this.setState({open: !this.state.open});
 
 <Container maxWidth="lg" >
 <Grid container spacing={3} className={this.state.classes.container}>
-<Grid item xs={12} md={9} lg={9}>
-<Paper className={this.state.classes.paper}>
-<LocationInfo locationid={this.state.locationinfo.locationbyid[0].locationid}/>
-</Paper>
-</Grid>
-
-<Grid item xs={12} md={9} lg={9}>
-<Paper className={this.state.classes.paper}>
-<ViewsChart locationid={this.state.locationinfo.locationbyid[0].locationid}/>
-</Paper>
-</Grid>
-
-<Grid item xs={12} md={9} lg={9}>
-<Paper>
-<ClicksChart locationid={this.state.locationinfo.locationbyid[0].locationid}/>
-</Paper>
-</Grid>
+<GridPaperComponent component={<LocationInfo locationid={this.state.locationinfo.locationbyid[0].locationid}/>}/>
+<GridPaperComponent component={<ClicksandViewsChart locationid={this.state.locationinfo.locationbyid[0].locationid} xaxis="dealtitle" yaxis='views' color="#8874d8"/>}/>
+<GridPaperComponent component={<ClicksandViewsChart locationid={this.state.locationinfo.locationbyid[0].locationid} xaxis="dealtitle" yaxis="clicks" color="#8874d8" />}/>
 
 </Grid>
 </Container>

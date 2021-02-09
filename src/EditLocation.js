@@ -26,6 +26,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import MenuItem from '@material-ui/core/MenuItem';
 import Container from '@material-ui/core/Container';
+import GridPaperComponent from './Widgets/GridPaper.js'
 import {
   BrowserRouter as Router,
   Switch,
@@ -90,61 +91,55 @@ class EditLocationPageComponent extends React.Component {
 handleToggle = () => this.setState({open: !this.state.open});
 
 
+changesize() {
+
+   if(this.state.open){
+     this.setState({width:100})
+   }
+   else{
+     this.setState({width:250})
+   }
+
+ }
+
+
+ changeopen(open) {
+
+ this.setState({open:open})
+
+ }
 
   render(){
     return (
       <React.Fragment>
-      <Drawer
-        variant="permanent"
-        docked={false}
 
-        open={this.state.open}
-          onRequestChange={(open) => {this.setState({open});}}
-        classes={{
-          paper: clsx(this.state.classes.drawerPaper, !this.state.open && this.state.classes.drawerPaperClose),
 
-        }}
-        >
-        <div className={this.state.classes.toolbarIcon}>
-        <Button
-          onClick={(event)=>{this.handleToggle(); if(this.state.open){this.setState({width:100})} else{this.setState({width:250})} console.log(this.state.width)}}
-        >
-        <MenuIcon/>
-        </Button>
-        </div>
+<SideBar locationid={this.state.locationid} classes={this.state.classes} open={this.state.open} handletoggle={this.handleToggle.bind(this)} statesetting={this.changesize.bind(this)} changeopen={this.changeopen.bind(this)}/>
 
-<SideBar locationid={this.state.locationid}/>
-           </Drawer>
+
+
 
            <div style={{marginLeft:this.state.width}} >
            <Container maxWidth="lg" >
       <form noValidate autoComplete="off">
       <Typography component="h2" variant="h6" color="primary" gutterBottom>{this.state.locationname}</Typography>
 
-            <Grid item xs={12} md={9} lg={9}>
-            <Paper className={this.state.classes.paper}>
-      <TextField required ref="LocationName" label="LocationName" defaultValue={this.state.locationname} onChange={(event)=>{this.setState({locationname:event.target.value});}}/>
-      </Paper>
-      </Grid>
-      <Grid item xs={12} md={9} lg={9}>
-      <Paper className={this.state.classes.paper}>
-      <TextField required ref="Latitude" label="Latitude" defaultValue={this.state.latitude} onChange={(event)=>{this.setState({latitude:event.target.value});}}/>
-      </Paper>
-      </Grid>
+
+      <GridPaperComponent component={<TextField required ref="LocationName" label="LocationName" defaultValue={this.state.locationname} onChange={(event)=>{this.setState({locationname:event.target.value});}}/>}/>
 
 
-            <Grid item xs={12} md={9} lg={9}>
-            <Paper className={this.state.classes.paper}>
-      <TextField required ref="Longitude" label="Longitude" defaultValue={this.state.longitude} onChange={(event)=>{this.setState({longitude:event.target.value});}}/>
-      </Paper>
-      </Grid>
+      <GridPaperComponent component={<TextField required ref="Latitude" label="Latitude" defaultValue={this.state.latitude} onChange={(event)=>{this.setState({latitude:event.target.value});}}/>}/>
+
+
+
+            <GridPaperComponent component={<TextField required ref="Longitude" label="Longitude" defaultValue={this.state.longitude} onChange={(event)=>{this.setState({longitude:event.target.value});}}/>}/>
+
 
 
       <Grid item xs={12} md={9} lg={9}>
       <Paper className={this.state.classes.paper}>
        <Button onClick={(event)=>{this.props.changelocation({variables:{locationid:this.state.locationid, locationname:this.state.locationname,latitude:parseFloat(this.state.latitude),longitude:parseFloat(this.state.longitude)}}); this.state.history.goBack();}}>Submit</Button>
        <Button onClick={(event)=>{this.props.deletelocation({variables:{locationid:this.state.locationid, locationname:this.state.locationname}}); this.state.history.goBack();}}>Delete</Button>
-
        </Paper>
        </Grid>
        </form>

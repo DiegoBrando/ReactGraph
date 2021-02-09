@@ -32,6 +32,7 @@ import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import GridPaperComponent from './Widgets/GridPaper.js'
 
 import {
   BrowserRouter as Router,
@@ -129,31 +130,12 @@ handleToggle = () => this.setState({open: !this.state.open});
            <Container maxWidth="lg" >
       <form noValidate autoComplete="off">
 
-      <Grid item xs={12} md={9} lg={9}>
-      <Paper className={this.state.classes.paper}>
-      <TextField required ref="LocationName" label="LocationName" defaultValue={this.state.locationname} onChange={(event)=>{this.setState({locationname:event.target.value});}}/>
-      </Paper>
-      </Grid>
 
-      <Grid item xs={12} md={9} lg={9}>
-      <Paper className={this.state.classes.paper}>
-      <TextField required ref="Latitude" label="Latitude" defaultValue={this.state.latitude} onChange={(event)=>{this.setState({latitude:event.target.value});}}/>
-      </Paper>
-      </Grid>
+      <GridPaperComponent component={<TextField required ref="LocationName" label="LocationName" defaultValue={this.state.locationname} onChange={(event)=>{this.setState({locationname:event.target.value});}}/>}/>
+      <GridPaperComponent component={<TextField required ref="Latitude" label="Latitude" defaultValue={this.state.latitude} onChange={(event)=>{this.setState({latitude:event.target.value});}}/>}/>
+      <GridPaperComponent component={<TextField required ref="Longitude" label="Longitude" defaultValue={this.state.longitude} onChange={(event)=>{this.setState({longitude:event.target.value});}}/>}/>
+       <GridPaperComponent component={<Button onClick={(event)=>{this.props.addlocation({variables:{locationname:this.state.locationname,latitude:parseInt(this.state.latitude),longitude:parseInt(this.state.longitude)}}); this.state.history.goBack();}}>Submit</Button>}/>
 
-
-      <Grid item xs={12} md={9} lg={9}>
-      <Paper className={this.state.classes.paper}>
-      <TextField required ref="Longitude" label="Longitude" defaultValue={this.state.longitude} onChange={(event)=>{this.setState({longitude:event.target.value});}}/>
-      </Paper>
-      </Grid>
-
-
-            <Grid item xs={12} md={9} lg={9}>
-            <Paper className={this.state.classes.paper}>
-       <Button onClick={(event)=>{this.props.addlocation({variables:{locationname:this.state.locationname,latitude:parseInt(this.state.latitude),longitude:parseInt(this.state.longitude)}}); this.state.history.goBack();}}>Submit</Button>
-       </Paper>
-       </Grid>
 </form>
 </Container>
    </div>

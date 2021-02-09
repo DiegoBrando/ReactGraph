@@ -1,8 +1,8 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from '@apollo/client';
-
-import './App.css'
+import useStyles from '../styling.js'
+import '../App.css'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,9 +16,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import MenuItem from '@material-ui/core/MenuItem';
-import SideBarA from './Widgets/SideBar.js'
-import SideBar from './Widgets/SideBar.js'
-import LocationPicker from './Widgets/LocationPicker.js'
+import SideBar from './SideBar.js'
 import {useHistory} from 'react-router-dom';
 import {
   BrowserRouter as Router,
@@ -27,11 +25,6 @@ import {
   Link
 } from "react-router-dom";
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
 
 
 
@@ -54,7 +47,7 @@ function SayNo(){
 
 
 
-function SelectPage(){
+function LocationPicker(props){
   const history = useHistory();
   const classes = useStyles();
   const { loading, error, data } = useQuery(GET_LOCATIONS)
@@ -65,33 +58,42 @@ function SelectPage(){
   if (loading) return <h1>Loading...</h1>
   console.log(data);
 
-  return <SelectPageComponent locations={data} history={history}/>
+  return <LocationPickerComponent locations={data} history={history} locationid={props.locationid} settingstate={props.settingstate} classes={classes}/>
 }
 
-class SelectPageComponent extends React.Component {
+class LocationPickerComponent extends React.Component {
 
   constructor(props) {
   super(props);
-  this.state = {locations: this.props.locations, history:this.props.history, locationid:0};
+  this.state = {locations: this.props.locations, history:this.props.history, locationid:this.props.locationid, settingstate:this.props.settingstate, classes:this.props.classes};
 }
 
-settinglocationid(locationid){
-  this.setState({locationid:locationid});
 
-}
 
 
   render(){
+    console.log(this.state.locationid)
     return (
-      <div><Grid container spacing={0} alignItems="center" justify="center">
-       <Grid item xs={12} xl={3}><Button onClick={(event)=>{console.log(event); this.props.history.push({pathname:'/NewLocation',state:{locationid:0}}); }}>New Location</Button></Grid>
-       <LocationPicker locationid={0} settingstate={this.settinglocationid.bind(this)}/>
+      <React.Fragment>
+<Grid item xs={12} md={9} lg={9}>
 
-       <Grid item={6}><Button onClick={(event)=>{console.log(this.state.locationid); this.props.history.push({pathname:'/Landing',state:{locationid:this.state.locationid}}); }}>Go</Button></Grid>
-      </Grid>
-      </div>
+<TextField
+       select
+       label="Select"
+       fullWidth={true}
+       defaultValue={this.state.locationid}
+       onChange={e=>{this.setState({locationid:e.target.value}); this.state.settingstate(e.target.value); console.log(e.target.value);}}
+
+     >
+     {this.state.locations.locations.map((location) => (
+           <MenuItem key={location.locationid} value={location.locationid}>
+             {location.locationname}
+           </MenuItem>
+         ))}
+       </TextField></Grid>
+      </React.Fragment>
     );
   }
 }
 
-export default SelectPage
+export default LocationPicker

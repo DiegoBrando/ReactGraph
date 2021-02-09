@@ -26,6 +26,9 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import MenuItem from '@material-ui/core/MenuItem';
 import Container from '@material-ui/core/Container';
+import GridPaperComponent from './Widgets/GridPaper.js'
+import LocationPicker from './Widgets/LocationPicker.js'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {
   BrowserRouter as Router,
   Switch,
@@ -116,30 +119,38 @@ class EditDealPageComponent extends React.Component {
 handleToggle = () => this.setState({open: !this.state.open});
 
 
+changesize() {
+
+   if(this.state.open){
+     this.setState({width:100})
+   }
+   else{
+     this.setState({width:250})
+   }
+
+ }
+
+
+ changeopen(open) {
+
+ this.setState({open:open})
+
+ }
+
+ settinglocationid(locationid){
+   this.setState({locationid:locationid});
+
+ }
+
+
   render(){
     return (
       <React.Fragment>
-      <Drawer
-        variant="permanent"
-        docked={false}
 
-        open={this.state.open}
-          onRequestChange={(open) => {this.setState({open});}}
-        classes={{
-          paper: clsx(this.state.classes.drawerPaper, !this.state.open && this.state.classes.drawerPaperClose),
 
-        }}
-        >
-        <div className={this.state.classes.toolbarIcon}>
-        <Button
-          onClick={(event)=>{this.handleToggle(); if(this.state.open){this.setState({width:100})} else{this.setState({width:250})} console.log(this.state.width)}}
-        >
-        <MenuIcon/>
-        </Button>
-        </div>
+<SideBar locationid={this.state.locationid} classes={this.state.classes} open={this.state.open} handletoggle={this.handleToggle.bind(this)} statesetting={this.changesize.bind(this)} changeopen={this.changeopen.bind(this)}/>
 
-<SideBar locationid={this.state.locationid}/>
-           </Drawer>
+
 
 
            <div style={{marginLeft:this.state.width}} >
@@ -149,42 +160,31 @@ handleToggle = () => this.setState({open: !this.state.open});
   <Typography component="h2" variant="h6" color="primary" gutterBottom>{this.state.title}</Typography>
 
 
+
+      <GridPaperComponent component={  <TextField required ref="TitleField" label="Title" defaultValue={this.state.title} onChange={(event)=>{this.setState({title:event.target.value});}}/>}/>
+
+
+
+      <GridPaperComponent component={<TextField required ref="DescriptionField" label="Description" defaultValue={this.state.description} onChange={(event)=>{this.setState({description:event.target.value});}}/>}/>
+
+
       <Grid item xs={12} md={9} lg={9}>
       <Paper className={this.state.classes.paper}>
-        <TextField required ref="TitleField" label="Title" defaultValue={this.state.title} onChange={(event)=>{this.setState({title:event.target.value});}}/>
+
+      <FormControlLabel
+              value="top"
+              control={<Checkbox enabled checked={this.state.featured}  label="Featured" color='primary' onChange={e=>{ this.setState({featured:e.target.checked});}}/>}
+              label="Featured"
+              labelPlacement="Left"
+            />
       </Paper>
       </Grid>
 
-      <Grid item xs={12} md={9} lg={9}>
+      <GridPaperComponent component={
       <Paper className={this.state.classes.paper}>
-      <TextField required ref="DescriptionField" label="Description" defaultValue={this.state.description} onChange={(event)=>{this.setState({description:event.target.value});}}/>
-      </Paper>
-      </Grid>
-
-      <Grid item xs={12} md={9} lg={9}>
-      <Paper className={this.state.classes.paper}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>featured</Typography>
-      <Checkbox enabled checked={this.state.featured} color='primary' onChange={e=>{ this.setState({featured:e.target.checked});}}/>
-      </Paper>
-      </Grid>
-      <Grid item xs={12} md={9} lg={9}>
-      <Paper className={this.state.classes.paper}>
-      <TextField
-       select
-       label="Select Location"
-       defaultValue={this.state.locationid}
-       onChange={e=>{this.setState({locationid:e.target.value}); console.log(e.target.value);}}
-
-     >
-
-     {this.state.locations.locations.map((location) => (
-           <MenuItem key={location.locationid} value={location.locationid}>
-             {location.locationname}
-           </MenuItem>
-         ))}
-       </TextField>
-       </Paper>
-       </Grid>
+    <LocationPicker locationid={this.state.locationid} settingstate={this.settinglocationid.bind(this)}/>
+    </Paper>
+  }/>
        <Grid item xs={12} md={9} lg={9}>
        <Paper className={this.state.classes.paper}>
        <Button onClick={(event)=>{this.props.changedeal({variables:{locationid:this.state.locationid, dealid:this.state.dealid,dealtitle:this.state.title,description:this.state.description,featured:this.state.featured}}); this.state.history.goBack();}}>Submit</Button>

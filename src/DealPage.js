@@ -118,33 +118,32 @@ handleRemove(id) {
 
 }
  handleToggle = () => this.setState({open: !this.state.open});
+ changesize() {
 
+   if(this.state.open){
+     this.setState({width:100})
+   }
+   else{
+     this.setState({width:250})
+   }
+
+ }
+
+
+ changeopen(open) {
+
+ this.setState({open:open})
+
+ }
 
   render(){
     return (
        <React.Fragment>
 
-        <Drawer
-          variant="permanent"
-          docked={false}
 
-          open={this.state.open}
-            onRequestChange={(open) => {this.setState({open});}}
-          classes={{
-            paper: clsx(this.state.classes.drawerPaper, !this.state.open && this.state.classes.drawerPaperClose),
 
-          }}
-          >
-          <div className={this.state.classes.toolbarIcon}>
-          <Button
-            onClick={(event)=>{this.handleToggle(); if(this.state.open){this.setState({width:100})} else{this.setState({width:250})} console.log(this.state.width)}}
-          >
-          <MenuIcon/>
-          </Button>
-          </div>
+<SideBar locationid={this.state.locationid} classes={this.state.classes} open={this.state.open} handletoggle={this.handleToggle.bind(this)} statesetting={this.changesize.bind(this)} changeopen={this.changeopen.bind(this)}/>
 
-<SideBar locationid={this.state.locationid}/>
-             </Drawer>
 <div style={{marginLeft:this.state.width}}>
 <Paper>
 <Grid container spacing={3}>

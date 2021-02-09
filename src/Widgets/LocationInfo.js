@@ -19,6 +19,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import useStyles from '../styling.js'
+import GridPaperComponent from './GridPaper.js'
 const GET_LOCATION = gql`
 query locationbyid($id:ID!){
   locationbyid(id:$id){
@@ -57,25 +58,11 @@ class LocationInfoComponent extends React.Component {
       <React.Fragment>
       <Container maxWidth="lg" >
       <Grid container spacing={3} className={this.state.classes.container}>
-      <Grid item xs={12} md={9} lg={9}>
-      <Paper>
-  <Typography component="h2" variant="h6" color="primary" gutterBottom>{this.state.locationinfo.locationbyid[0].locationname}</Typography>
-  </Paper>
-  </Grid>
 
+  <GridPaperComponent component={<Typography component="h2" variant="h6" color="primary" gutterBottom>{this.state.locationinfo.locationbyid[0].locationname}</Typography>}/>
+  <GridPaperComponent component={<Typography color="textSecondary"> {this.state.locationinfo.locationbyid[0].latitude }       {this.state.locationinfo.locationbyid[0].longitude}</Typography>}/>
+  <GridPaperComponent component={<Button onClick={(event)=>{console.log(this.state.locationinfo.locationbyid[0].locationid); this.state.history.push({pathname:'/EditLocation',state:{locationid:this.state.locationinfo.locationbyid[0].locationid,locationname:this.state.locationinfo.locationbyid[0].locationname, latitude:this.state.locationinfo.locationbyid[0].latitude,longitude:this.state.locationinfo.locationbyid[0].longitude}}); }}>Edit Location Details</Button>}/>
 
-  <Grid item xs={12} md={9} lg={9}>
-  <Paper>
-  <Typography color="textSecondary"> {this.state.locationinfo.locationbyid[0].latitude }       {this.state.locationinfo.locationbyid[0].longitude}</Typography>
-</Paper>
-  </Grid>
-
-
-  <Grid item xs={12} md={9} lg={9}>
-  <Paper>
-  <Button onClick={(event)=>{console.log(this.state.locationinfo.locationbyid[0].locationid); this.state.history.push({pathname:'/EditLocation',state:{locationid:this.state.locationinfo.locationbyid[0].locationid,locationname:this.state.locationinfo.locationbyid[0].locationname, latitude:this.state.locationinfo.locationbyid[0].latitude,longitude:this.state.locationinfo.locationbyid[0].longitude}}); }}>Edit Location Details</Button>
-</Paper>
-  </Grid>
 
 </Grid>
 </Container>
